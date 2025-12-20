@@ -423,6 +423,38 @@ def run_methylkit_tiled_dmr_analysis(
         tiles_norm <- normalizeCoverage(tiles_filtered, method = "median")
     ''')
     
+
+    if verbose:
+        print("Step 5b: Exporting normalized methylation matrix...")
+
+    norm_matrix_path = os.path.join(output_dir, "tile_methylation_normalized.csv")
+
+    ro.r(f'''
+        # Unite normalized tiles
+        tiles_for_export <- unite(tiles_norm, destrand = FALSE, min.per.group = 0L)
+        tile_data <- getData(tiles_for_export)
+        
+        # Build matrix with methylation rates from normalized data
+        meth_matrix <- data.frame(
+            tile_id = paste(tile_data$chr, tile_data$start, tile_data$end, sep="_")
+        )
+        
+        for (i in 1:{n_samples}) {{
+            cov_col <- paste0("coverage", i)
+            numCs_col <- paste0("numCs", i)
+            
+            if (cov_col %in% colnames(tile_data)) {{
+                meth_rate <- tile_data[[numCs_col]] / tile_data[[cov_col]]
+                meth_matrix[[sample_ids[[i]]]] <- meth_rate
+            }}
+        }}
+        
+        write.csv(meth_matrix, "{norm_matrix_path}", row.names = FALSE)
+    ''')
+
+    norm_matrix_df = pd.read_csv(norm_matrix_path, index_col='tile_id').T
+
+
     if verbose:
         print("Step 6: Merging samples...")
     
@@ -515,7 +547,8 @@ def run_methylkit_tiled_dmr_analysis(
         'tiles_all': all_tiles_df,
         'tiles_significant': sig_tiles_df,
         'tile_stats': tile_stats,
-        'tile_matrix': tile_matrix_df
+        'tile_matrix': tile_matrix_df,
+        'norm_tile_matrix': norm_matrix_df
     }
 
 
