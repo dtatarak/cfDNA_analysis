@@ -38,3 +38,15 @@ LDFLAGS = -L/opt/homebrew/opt/libomp/lib -lomp
 CPPFLAGS = -I/opt/homebrew/opt/libomp/include
 EOF
 ```
+
+
+# Future Work:
+
+
+Instead of using arbitrary tiled regions, we should look at known annotated regions
+- promoters
+- TSS
+- CpG islands
+
+We can perform this same analysis by using genomic regions from a BED file instaed of providing a 
+window for tiling.

@@ -268,11 +268,12 @@ def bootstrap_dmr_classifier(
     labels: list,
     n_iterations: int = 20,
     n_holdout_per_class: int = 3,
-    tile_window: int = 10000,
-    tile_min_coverage: int = 3,
+    tile_window: int = 5000,
+    tile_step: int = 5000,
+    tile_min_coverage: int = 5,
     min_diff: float = 0.1,
     qvalue: float = 0.05,
-    classifier: str = 'random_forest',
+    classifier: str = 'logistic',
     method: str = 'lasso',
     verbose: bool = True
 ):
@@ -355,6 +356,7 @@ def bootstrap_dmr_classifier(
                     treatments=list(dmr_labels),
                     output_dir=temp_dir,
                     tile_window=tile_window,
+                    tile_step=tile_step,
                     tile_min_coverage=tile_min_coverage,
                     min_diff=min_diff,
                     min_per_group=1,
@@ -663,7 +665,8 @@ def run_bootstrap_analysis(
     labels: list,
     n_iterations: int = 20,
     n_holdout_per_class: int = 3,
-    tile_window: int = 10000,
+    tile_window: int = 5000,
+    tile_step: int = 5000,
     classifier: str = 'logistic',
     method: str = 'lasso',
     verbose: bool = False
@@ -707,6 +710,7 @@ def run_bootstrap_analysis(
         n_iterations=n_iterations,
         n_holdout_per_class=n_holdout_per_class,
         tile_window=tile_window,
+        tile_step=tile_step,
         classifier=classifier,
         method=method,
         verbose=verbose
@@ -917,4 +921,3 @@ def run_bootstrap_analysis(
         print("LOW - Results may not be reliable")
     
     return results
-
