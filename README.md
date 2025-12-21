@@ -50,3 +50,5 @@ Instead of using arbitrary tiled regions, we should look at known annotated regi
 
 We can perform this same analysis by using genomic regions from a BED file instaed of providing a 
 window for tiling.
+
+I did the first step, which was DMR analysis using CpG island regions, and it looks quite similar to the tiled version. This suggests the tiles I was arbitrarily drawing do in fact overlap known regions. That's good! I would like to try this now with promoter regions. At the very least it will help in interpreting the strongest predictive features we found from modeling.
